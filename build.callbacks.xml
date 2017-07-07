@@ -41,6 +41,43 @@
         <exec passthru="true" command="git pull origin dev"/>
     </target>
 
+    <!-- Setup theme - Based on: https://git.brightsolutions.de/dirk.peter/libsass-setup/tree/master -->
+    <target name="drupal:setup-theme">
+        <if>
+            <not><isset property="theme_name" /></not>
+            <then>
+                <input message="Enter the machine name for the theme." propertyName="theme_name"/>
+            </then>
+        </if>
+
+        <!-- clone repository -->
+        <gitclone
+                repository="git@git.brightsolutions.de:dirk.peter/libsass-setup.git"
+                targetPath="${project.basedir}/docroot/themes/custom/${theme_name}" />
+
+        <!-- Remove .git folder -->
+        <delete dir="${project.basedir}/docroot/themes/custom/${theme_name}/.git" includeemptydirs="true" verbose="true" failonerror="true" />
+
+        <!-- Copy template files -->
+        <copy todir="${project.basedir}/docroot/themes/custom/${theme_name}">
+            <fileset dir="${project.basedir}/docroot/themes/custom/${theme_name}/_template/drupal-8">
+                <include name="**"></include>
+                <exclude name="**/.svn/**"></exclude>
+            </fileset>
+        </copy>
+
+        <!-- Delete template folder -->
+        <delete dir="${project.basedir}/docroot/themes/custom/${theme_name}/_template" includeemptydirs="true" verbose="true" failonerror="true" />
+
+        <!-- Rename files -->
+        <move todir="${project.basedir}/docroot/themes/custom/${theme_name}" includeemptydirs="false">
+            <fileset dir="${project.basedir}/docroot/themes/custom/${theme_name}">
+                <include name="__name__*"/>
+            </fileset>
+            <mapper type="glob" from="__name__" to="${theme_name}"/>
+        </move>
+    </target>
+
     <!-- ### Reinstall packages from composer.json to remove all staff not defined in composer.json. -->
     <target name="composer:install" depends="load-properties" description="Install packages from composer.json">
 

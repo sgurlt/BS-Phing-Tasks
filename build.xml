@@ -70,6 +70,19 @@
                     <property name="config-name" value="block.block.seven_admin" />
                 </phingcall>
 
+                <!-- Create a theme -->
+                <input message="Do you want to create a custom theme?" propertyName="create-custom-theme" validArgs="yes,no" defaultValue="yes"/>
+                <if>
+                    <istrue value="${create-custom-theme}"/>
+                    <then>
+                        <input message="Enter the machine name for the theme." propertyName="theme_name"/>
+                        <phingcall target="drupal:setup-theme">
+                            <property name="theme_name" value="${theme_name}" />
+                        </phingcall>
+                    </then>
+                </if>
+
+
                 <!-- Initial config export -->
                 <phingcall target="drupal:config-export"/>
             </else>
