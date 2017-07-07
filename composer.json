@@ -1,7 +1,7 @@
 {
     "name": "brightsolutions/phing-tasks",
+    "type": "library",
     "description": "Contains the Bright Solutions Drupal project phing tasks.",
-    "type": "phing-tasks",
     "authors": [
         {
             "name": "Sebastian Gurlt",
