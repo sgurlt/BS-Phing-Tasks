@@ -92,6 +92,25 @@
                             <property name="key" value="default" />
                             <property name="value" value="${theme_name}" />
                         </phingcall>
+
+                        <!-- Remove default blocks -->
+                        <phingcall target="drupal:delete-config">
+                            <property name="config-name" value="block.block.${theme_name}_login" />
+                        </phingcall>
+                        <phingcall target="drupal:delete-config">
+                            <property name="config-name" value="block.block.${theme_name}_branding" />
+                        </phingcall>
+                        <phingcall target="drupal:delete-config">
+                            <property name="config-name" value="block.block.${theme_name}_tools" />
+                        </phingcall>
+                        <phingcall target="drupal:delete-config">
+                            <property name="config-name" value="block.block.${theme_name}_admin" />
+                        </phingcall>
+
+                        <!-- Uninstall the "stark" theme. -->
+                        <phingcall target="drupal:uninstall-module">
+                            <property name="module" value="stark" />
+                        </phingcall>
                     </then>
                 </if>
 

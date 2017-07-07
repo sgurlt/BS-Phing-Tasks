@@ -274,6 +274,20 @@
         </drush>
     </target>
 
+    <!-- Uninstall modules / themes -->
+    <target name="drupal:uninstall-module" depends="setup-phing-drush" description="Uninstalls one or multiple Drupal modules">
+        <if>
+            <not><isset property="module" /></not>
+            <then>
+                <input message="Enter a comma separated list of module machine names which should be uninstalled" propertyName="module"/>
+            </then>
+        </if>
+
+        <drush command="pm-uninstall" assume="yes">
+            <param>${module}</param>
+        </drush>
+    </target>
+
     <!-- Set a config value -->
     <target name="drupal:set-config-value" depends="setup-phing-drush" description="Set a config value">
         <if>
