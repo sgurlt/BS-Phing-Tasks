@@ -3,6 +3,7 @@
 
     <taskdef name="drush" classname="Drush\Task" />
 
+    <import file="${project.basedir}/build.project.xml"/>
     <import file="${project.basedir}/build.common.xml"/>
     <import file="${project.basedir}/build.test.xml"/>
     <import file="${project.basedir}/build.callbacks.xml"/>
