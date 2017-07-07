@@ -76,12 +76,19 @@
                     <istrue value="${create-custom-theme}"/>
                     <then>
                         <input message="Enter the machine name for the theme." propertyName="theme_name"/>
+                        <!-- Setup Theme -->
                         <phingcall target="drupal:setup-theme">
                             <property name="theme_name" value="${theme_name}" />
                         </phingcall>
+
+                        <!-- Set as default -->
+                        <phingcall target="drupal:set-config-value">
+                            <property name="config-name" value="system.theme" />
+                            <property name="key" value="default" />
+                            <property name="value" value="${theme_name}" />
+                        </phingcall>
                     </then>
                 </if>
-
 
                 <!-- Initial config export -->
                 <phingcall target="drupal:config-export"/>
