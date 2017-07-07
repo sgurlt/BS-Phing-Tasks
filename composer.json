@@ -8,5 +8,6 @@
             "email": "gurlt@brightsolutions.de"
         }
     ],
+    "minimum-stability": "dev",
     "require": {}
 }
