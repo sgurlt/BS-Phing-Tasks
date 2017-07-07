@@ -81,6 +81,11 @@
                             <property name="theme_name" value="${theme_name}" />
                         </phingcall>
 
+                        <!-- Enable Theme -->
+                        <phingcall target="drupal:enable-module">
+                            <property name="module" value="${theme_name}" />
+                        </phingcall>
+
                         <!-- Set as default -->
                         <phingcall target="drupal:set-config-value">
                             <property name="config-name" value="system.theme" />
