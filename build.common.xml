@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bs_drupal_8_common" default="load-properties">
+
+    <!-- ### Setup Phing Drush integration -->
+    <target name="setup-phing-drush" depends="load-properties" description="Sets up Phing Drush module ">
+        <!-- Register as custom Phing task -->
+        <taskdef name="drush" classname="DrushTask" classpath="${project.basedir}/drush/contrib/phingdrushtask" />
+
+        <if>
+            <equals arg1="${drupal.env}" arg2="local-vm" />
+            <then>
+                <!-- Set drush alias -->
+                <property name="drush.alias" value="@${drupal.vhost}"/>
+            </then>
+            <else>
+                <!-- Run drush from the project Drupal directory -->
+                <property name="drush.root" value="${project.drupal.dir}"/>
+            </else>
+        </if>
+
+        <!-- Define local drush execute file -->
+        <property name="drush.bin" value="${project.basedir}/.bin/drush"/>
+    </target>
+
+
+            <!-- ### Load properties -->
+    <target name="load-properties" description="Load build properties from file build.properties">
+        <!-- Define project.drupal.dir property -->
+        <property name="project.drupal.dir" value="${project.basedir}/docroot" />
+
+        <php function="dirname" returnProperty="phing.dir">
+            <param value="${phing.file}"/>
+        </php>
+
+        <property name="project.basedir" value="${phing.dir}" />
+
+        <property name="drupal.version" value="8" />
+        <property name="drupal.profile" value="minimal" />
+
+        <property name="drupal.db.prefix" value="" />
+        <property name="drupal.db.host" value="localhost" />
+        <property name="drupal.db.port" value="3306" />
+
+        <!-- Use condition instead of unless property as we cannot unset properties in Phing -->
+        <if>
+            <or>
+                <not><istrue value="${project.properties.loaded}" /></not>
+                <not><isset property="project.properties.loaded" /></not>
+            </or>
+            <then>
+                <!-- Allow override using `build.properties` in build file directory -->
+                <available file="${phing.dir}/build.properties" property="project.properties.file" value="${phing.dir}/build.properties" />
+
+                <!-- Load the overriding properties. -->
+                <property file="${project.properties.file}" override="true" />
+
+                <!-- Set property to prevent unnecessary additional invocations of this target -->
+                <property name="project.properties.loaded" value="true" />
+            </then>
+        </if>
+    </target>
+
+</project>

@@ -1,0 +1,12 @@
+{
+    "name": "brightsolutions/phing-tasks",
+    "description": "Contains the Bright Solutions Drupal project phing tasks.",
+    "type": "phing-tasks",
+    "authors": [
+        {
+            "name": "Sebastian Gurlt",
+            "email": "gurlt@brightsolutions.de"
+        }
+    ],
+    "require": {}
+}

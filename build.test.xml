@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bs_drupal_8_test" default="tests:run" phingVersion="2.13">
+
+    <!-- ### Reinstall site and run codeception tests -->
+    <target name="tests:run" depends="load-properties" description="Check feature statuses and run codeception tests">
+
+        <phingcall target="tests:check-debug-code"/>
+        <phingcall target="tests:code-analysis"/>
+
+        <switch value="${drupal.test_engine}">
+            <case value="behat">
+                <phingcall target="tests:behat"/>
+            </case>
+            <case value="codeception">
+                <phingcall target="tests:codecept"/>
+            </case>
+            <default>
+                <echo message="Test engine isn't defined." />
+            </default>
+        </switch>
+    </target>
+
+    <!-- ### Run codeception tests -->
+    <target name="tests:codecept" description="Run codeception tests">
+        <exec command="php ./vendor/bin/codecept run acceptance" passthru="true" dir="docroot/sites/all/tests/codeception" checkreturn="true" />
+    </target>
+
+    <!-- ### Run behat tests -->
+    <target name="tests:behat" description="Run behat tests">
+        <exec command="./.bin/behat -f pretty -o std -f junit -o ${project.basedir}/test-results/behat" passthru="true" dir="docroot/sites/all/tests/behat" checkreturn="true" />
+    </target>
+
+    <!-- ### Check for missed debug code -->
+    <target name="tests:check-debug-code" description="Check for missed debug code">
+
+        <mkdir dir="${project.drupal.dir}/modules/custom"/>
+
+        <!-- Check debug code in php files -->
+        <exec command="grep -nri --include='*.php' --include='*.install' --include='*.module'
+            --include='*.inc' 'dpm(\|dvm(\|var_dump(' '${project.drupal.dir}/modules/custom'"
+              outputProperty="output" />
+        <if>
+            <istrue value="${output}"/>
+            <then>
+                <fail message="ERROR: Found debug code in PHP files: ${output}" />
+            </then>
+            <else>
+                <echo message="SUCCESS: No missed debug code in PHP files." />
+            </else>
+        </if>
+
+        <!-- Check debug code in js files -->
+        <exec command="grep -nri --include='*.js' 'console.log(' '${project.drupal.dir}/modules/custom'"
+              outputProperty="output" />
+        <if>
+            <istrue value="${output}"/>
+            <then>
+                <fail message="ERROR: Found debug code in JS files: ${output}" />
+            </then>
+            <else>
+                <echo message="SUCCESS: No missed debug code in JS files." />
+            </else>
+        </if>
+    </target>
+
+
+    <!-- ### Code analysis & Documentation ### -->
+
+    <target name="setup-analysis"
+            depends="setup-filesets">
+        <mkdir dir="${project.drupal.dir}/modules/custom"/>
+        <mkdir dir="${project.basedir}/test-results"/>
+        <autoloader autoloaderpath="${project.basedir}/vendor/autoload.php"/>
+    </target>
+
+    <target name="setup-filesets"
+            depends="load-properties">
+        <fileset>
+            <patternset id="php">
+                <include name="**/*.php" />
+                <include name="**/*.module" />
+                <include name="**/*.install" />
+                <include name="**/*.inc" />
+                <include name="**/*.profile" />
+                <include name="**/*.test" />
+            </patternset>
+        </fileset>
+
+        <fileset id="custom-code" dir="${project.drupal.dir}/modules/custom">
+            <patternset refid="php" />
+        </fileset>
+    </target>
+
+    <target name="tests:code-analysis" depends="code-sniffer, mess-detector, duplicate-code" />
+
+    <target name="code-sniffer" depends="setup-analysis">
+        <phpcodesniffer standard="Drupal,DrupalPractice">
+            <fileset refid="custom-code"/>
+            <config name="installed_paths" value="${project.basedir}/vendor/drupal/coder/coder_sniffer"/>
+            <formatter type="checkstyle" outfile="${project.basedir}/test-results/checkstyle.xml"/>
+        </phpcodesniffer>
+    </target>
+
+    <target name="code-sniffer-local" depends="setup-analysis">
+        <if>
+            <isset property="files" />
+            <then>
+                <phpcodesniffer standard="Drupal,DrupalPractice"
+                                showWarnings="true"
+                                haltonerror="true"
+                                file="${files}"
+                                allowedFileExtensions="php module install inc profile test" >
+                    <config name="installed_paths" value="${project.basedir}/vendor/drupal/coder/coder_sniffer"/>
+                </phpcodesniffer>
+            </then>
+            <else>
+                <phpcodesniffer standard="Drupal,DrupalPractice"
+                                showWarnings="true"
+                                haltonerror="true">
+                    <fileset refid="custom-code"/>
+                    <config name="installed_paths" value="${project.basedir}/vendor/drupal/coder/coder_sniffer"/>
+                </phpcodesniffer>
+            </else>
+        </if>
+    </target>
+
+    <target name="code-beautifier-and-fixer">
+        <exec command=".bin/phpcbf --standard='Drupal,DrupalPractice' '${project.basedir}/docroot/modules/custom'" passthru="true"/>
+    </target>
+
+    <target name="mess-detector" depends="setup-analysis">
+        <phpmd>
+            <fileset refid="custom-code"/>
+            <formatter outfile="${project.basedir}/test-results/pmd.xml" type="xml" />
+        </phpmd>
+    </target>
+
+    <target name="duplicate-code" depends="setup-analysis">
+        <phpcpd>
+            <fileset refid="custom-code"/>
+            <formatter outfile="${project.basedir}/test-results/pmd-cpd.xml" type="pmd" />
+        </phpcpd>
+    </target>
+
+    <target name="php-lint" depends="setup-analysis">
+        <phplint haltonfailure="true">
+            <fileset dir="${project.drupal.dir}">
+                <patternset refid="php"/>
+            </fileset>
+        </phplint>
+    </target>
+
+</project>

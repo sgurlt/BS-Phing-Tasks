@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bs_drupal_8_callbacks" phingVersion="2.13">
+
+    <import file="${project.basedir}/build.common.xml"/>
+
+    <!-- ### Install Drupal -->
+    <target name="drupal:site-install"
+            description="Installs Drupal">
+        <drush command="site-install" assume="yes">
+            <option name="site-name">${drupal.sitename}</option>
+            <option name="site-mail">${drupal.mail}</option>
+            <option name="account-name">${drupal.admin_name}</option>
+            <option name="account-mail">${drupal.mail}</option>
+            <option name="locale">${drupal.language.default_language}</option>
+            <param>${drupal.profile}</param>
+        </drush>
+    </target>
+
+    <!-- ### Install Drupal and import configuration -->
+    <target name="drupal:site-install-config-import"
+            description="Installs Drupal and imports configuration.">
+        <drush command="site-install" assume="yes">
+            <option name="config-dir">sites/default/config</option>
+            <option name="site-name">${drupal.sitename}</option>
+            <option name="site-mail">${drupal.mail}</option>
+            <option name="account-name">${drupal.admin_name}</option>
+            <option name="account-mail">${drupal.mail}</option>
+            <param>${drupal.profile}</param>
+        </drush>
+    </target>
+
+    <!-- ### Export active configuration -->
+    <target name="drupal:config-export" description="Export the active configuration.">
+        <drush command="config-export" assume="yes">
+            <param>staging</param>
+        </drush>
+    </target>
+
+    <!-- ### Get latest changes from dev branch  -->
+    <target name="git:pull:dev" description="Get latest changes from dev branch">
+        <exec passthru="true" command="git pull origin dev"/>
+    </target>
+
+    <!-- ### Reinstall packages from composer.json to remove all staff not defined in composer.json. -->
+    <target name="composer:install" depends="load-properties" description="Install packages from composer.json">
+
+        <if>
+            <not><available file="${project.basedir}/.bin/composer"/></not>
+            <then>
+                <fail message="You have to install build tools locally. Run _PROJECT_/scripts/build-tools-install.sh to install." />
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="${drupal.env}" arg2="live" />
+            <then> <exec passthru="true" command="${project.basedir}/.bin/composer install --no-dev"/> </then>
+            <else> <exec passthru="true" command="${project.basedir}/.bin/composer install"/> </else>
+        </if>
+    </target>
+
+    <!-- ### Update composer.lock file and install packages. -->
+    <target name="composer:update" description="Update composer.lock file and install packages">
+        <exec passthru="true" command="${project.basedir}/.bin/composer update"/>
+    </target>
+    
+    <!-- ### Initialize default site settings. -->
+    <target name="settings-init" depends="load-properties" description="Initialize default site settings">
+
+        <if>
+            <!-- If `build.properties` exists then assume we have a project root directory -->
+            <and>
+                <isset property="drupal.sitename" />
+                <isset property="drupal.vhost" />
+            </and>
+            <then>
+                <php expression="str_replace('.', '\.', '${drupal.vhost}')" returnProperty="drupal.host_pattern"/>
+                <if>
+                    <not><available file="${project.drupal.dir}/sites/default/settings.${drupal.env}.php"/></not>
+                    <then>
+                        <copy file="${project.basedir}/templates/settings.${drupal.env}.template.php"
+                              tofile="${project.drupal.dir}/sites/default/settings.${drupal.env}.php">
+                            <filterchain>
+                                <expandproperties />
+                            </filterchain>
+                        </copy>
+                    </then>
+                </if>
+                <if>
+                    <and>
+                        <equals arg1="${drupal.env}" arg2="local-vm" />
+                        <not><available file="${project.basedir}/drupalvm/local.config.yml"/></not>
+                    </and>
+                    <then>
+                        <copy file="${project.basedir}/templates/local.config.template.yml" tofile="${project.basedir}/drupalvm/local.config.yml">
+                            <filterchain>
+                                <expandproperties />
+                            </filterchain>
+                        </copy>
+                    </then>
+                </if>
+                <if>
+                    <and>
+                        <isset property="drupal.vhost" />
+                        <not><available file="${project.drupal.dir}/sites/all/drush/drushrc.php"/></not>
+                    </and>
+                    <then>
+                        <copy file="${project.basedir}/templates/drushrc.template.php" tofile="${project.drupal.dir}/sites/all/drush/drushrc.php">
+                            <filterchain>
+                                <expandproperties />
+                            </filterchain>
+                        </copy>
+                    </then>
+                </if>
+                <if>
+                    <and>
+                        <isset property="drupal.vhost" />
+                        <equals arg1="${drupal.test_engine}" arg2="codeception" />
+                        <not><available file="${project.drupal.dir}/sites/all/tests/codeception/tests/acceptance.suite.yml"/></not>
+                    </and>
+                    <then>
+                        <exec passthru="true" command="${project.basedir}/.bin/composer install" dir="${project.drupal.dir}/sites/all/tests/codeception" />
+
+                        <copy file="${project.basedir}/templates/acceptance.suite.template.yml"
+                              tofile="${project.drupal.dir}/sites/all/tests/codeception/tests/acceptance.suite.yml">
+                            <filterchain>
+                                <expandproperties />
+                            </filterchain>
+                        </copy>
+                    </then>
+                </if>
+                <if>
+                    <and>
+                        <isset property="drupal.vhost" />
+                        <equals arg1="${drupal.test_engine}" arg2="behat" />
+                        <not><available file="${project.drupal.dir}/sites/all/tests/behat/behat.yml"/></not>
+                    </and>
+                    <then>
+                        <exec passthru="true" command="${project.basedir}/.bin/composer install" dir="${project.drupal.dir}/sites/all/tests/behat" />
+                        <if>
+                            <equals arg1="${drupal.env}" arg2="local-vm" />
+                            <then>
+                                <property name="drupal.behat.api_driver" value="drush" />
+                            </then>
+                            <else>
+                                <property name="drupal.behat.api_driver" value="drupal" />
+                            </else>
+                        </if>
+                        <copy file="${project.basedir}/templates/behat.template.yml"
+                              tofile="${project.drupal.dir}/sites/all/tests/behat/behat.yml">
+                            <filterchain>
+                                <expandproperties />
+                            </filterchain>
+                        </copy>
+                    </then>
+                </if>
+            </then>
+            <else>
+                <fail message="ERROR: You have to create and configure build.properties file. Copy and configure /templates/build.template.properties to /build.properties." />
+            </else>
+        </if>
+
+    </target>
+
+    <!-- ### Setup permissions -->
+    <target name="setup-dirs-permissions" depends="load-properties" description="Set file permissions after build.">
+
+        <!-- Allow write access to files directory. -->
+        <chmod mode="0777" failonerror="false">
+            <fileset dir="${project.drupal.dir}">
+                <patternset>
+                    <include name="sites/default/files"/>
+                    <include name="sites/default/files/**/*"/>
+                </patternset>
+            </fileset>
+        </chmod>
+        <chmod mode="0755" failonerror="false">
+            <fileset dir="${project.drupal.dir}">
+                <patternset>
+                    <include name="sites/default"/>
+                </patternset>
+            </fileset>
+        </chmod>
+    </target>
+
+    <!-- ### Update translations for contrib modules -->
+    <target name="drupal:locale-update"
+            description="Update translations for contrib modules">
+        <drush command="locale-update" />
+    </target>
+
+
+    <!-- ### Export translations -->
+    <target name="drupal:config:export-translations"
+            depends="setup-phing-drush"
+            description="Run the drush commands to get the latest contrib translations and export them with your custom translations to the projects .po file">
+
+        <!-- Update translations for contrib modules-->
+        <phingcall target="drupal:locale-update"/>
+
+        <drush command="language-export">
+            <param>de</param>
+            <param>sites/default/translation/DE.po</param>
+        </drush>
+    </target>
+
+    <!-- ### Import translations -->
+    <target name="drupal:config:import-translations" depends="setup-phing-drush" description="Run the drush commands to import the projects .po file">
+        <drush command="language-import">
+            <param>de</param>
+            <param>sites/default/translation/DE.po</param>
+            <option name="replace"/>
+        </drush>
+    </target>
+
+    <!-- Enable modules / themes -->
+    <target name="drupal:enable-module" depends="setup-phing-drush" description="Enables one or multiple Drupal modules">
+        <if>
+            <not><isset property="module" /></not>
+            <then>
+                <input message="Enter a comma separated list of module machine names which should be enabled" propertyName="module"/>
+            </then>
+        </if>
+
+        <drush command="pm-enable" assume="yes">
+            <param>${module}</param>
+        </drush>
+    </target>
+
+    <!-- Set a config value -->
+    <target name="drupal:set-config-value" depends="setup-phing-drush" description="Set a config value">
+        <if>
+            <not><isset property="config-name" /></not>
+            <then>
+                <input message="Enter the config name you want to set a value for." propertyName="config-name"/>
+                <input message="Enter the key you want to set a value for." propertyName="key"/>
+                <input message="Enter the value for the config you want to set." propertyName="value"/>
+            </then>
+        </if>
+
+        <drush command="config-set" assume="yes">
+            <param>${config-name}</param>
+            <param>${key}</param>
+            <param>${value}</param>
+        </drush>
+    </target>
+
+    <!-- Delete config -->
+    <target name="drupal:delete-config" depends="setup-phing-drush" description="Delete config">
+        <if>
+            <not><isset property="config-name" /></not>
+            <then>
+                <input message="Enter the config name you want to delete." propertyName="config-name"/>
+            </then>
+        </if>
+
+        <drush command="config-delete" assume="yes">
+            <param>${config-name}</param>
+        </drush>
+    </target>
+
+</project>
