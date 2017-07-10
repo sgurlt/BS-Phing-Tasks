@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="bs_drupal_8_callbacks" default="Project:install" phingVersion="2.4.11">
+<project name="Bright Solutions - Default Phing Tasks" default="Default:install" phingVersion="2.4.11">
 
     <taskdef name="drush" classname="Drush\Task" />
 
@@ -8,7 +8,7 @@
     <import file="vendor/brightsolutions/phing-tasks/build.callbacks.xml"/>
 
     <!-- ### Install Drupal and import configurations. Also contains the initial Drupal project setup. -->
-    <target name="Project:install"
+    <target name="Default:install"
             depends="composer:install,
             setup-phing-drush,
             settings-init"
@@ -132,7 +132,7 @@
         <drush command="uli" />
     </target>
 
-    <target name="Project:update" depends="setup-phing-drush"
+    <target name="Default:update" depends="setup-phing-drush"
             description="Composer install, update datebase, update entites, config import, translation import.">
 
         <phingcall target="composer:install"/>
@@ -148,14 +148,14 @@
     </target>
 
     <!-- Export the active configuration and translations -->
-    <target name="Project:export" depends="setup-phing-drush" description="Export the active configuration and translations.">
+    <target name="Default:export" depends="setup-phing-drush" description="Export the active configuration and translations.">
         <phingcall target="drupal:config-export"/>
         <!-- Include the below call if you have to work with translations within this project. -->
         <!-- <phingcall target="drupal:config:export-translations"/> -->
     </target>
 
     <!-- PHP Code Test -->
-    <target name="Code:php-code-test" description="Tests the projects custom php code.">
+    <target name="Default:php-code-test" description="Tests the projects custom php code.">
         <input propertyName="test_scope"
                validargs="custom_module,specific_files,all_custom_files"
                defaultvalue="all_custom_files"
@@ -192,7 +192,7 @@
     </target>
 
     <!-- PHP Code Fix -->
-    <target name="Code:php-code-fix" description="Will automatically fix code style issues based on the Drupal coding standards.">
+    <target name="Default:php-code-fix" description="Will automatically fix code style issues based on the Drupal coding standards.">
         <phingcall target="code-beautifier-and-fixer"/>
     </target>
 </project>
