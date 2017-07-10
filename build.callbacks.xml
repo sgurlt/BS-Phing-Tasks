@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bs_drupal_8_callbacks" phingVersion="2.13">
 
-    <import file="${project.basedir}/build.common.xml"/>
+    <import file="vendor/brightsolutions/phing-tasks/build.common.xml"/>
 
     <!-- ### Install Drupal -->
     <target name="drupal:site-install"

@@ -2,10 +2,10 @@
 <project name="bs_drupal_8_callbacks" default="Project:install" phingVersion="2.4.11">
 
     <taskdef name="drush" classname="Drush\Task" />
-    
-    <import file="${project.basedir}/build.common.xml"/>
-    <import file="${project.basedir}/build.test.xml"/>
-    <import file="${project.basedir}/build.callbacks.xml"/>
+
+    <import file="vendor/brightsolutions/phing-tasks/build.common.xml"/>
+    <import file="vendor/brightsolutions/phing-tasks/build.test.xml"/>
+    <import file="vendor/brightsolutions/phing-tasks/build.callbacks.xml"/>
 
     <!-- ### Install Drupal and import configurations. Also contains the initial Drupal project setup. -->
     <target name="Project:install"
