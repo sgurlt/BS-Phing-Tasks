@@ -38,8 +38,25 @@
         <property name="drupal.profile" value="minimal" />
 
         <property name="drupal.db.prefix" value="" />
-        <property name="drupal.db.host" value="localhost" />
-        <property name="drupal.db.port" value="3306" />
+
+        <if>
+            <or>
+                <equals arg1="${drupal.db.host}" arg2="" />
+                <not><isset property="drupal.db.host" /></not>
+            </or>
+            <then>
+                <property name="drupal.db.host" value="localhost" />
+            </then>
+        </if>
+        <if>
+            <or>
+                <equals arg1="${drupal.db.port}" arg2="" />
+                <not><isset property="drupal.db.port" /></not>
+            </or>
+            <then>
+                <property name="drupal.db.port" value="3306" />
+            </then>
+        </if>
 
         <!-- Use condition instead of unless property as we cannot unset properties in Phing -->
         <if>
