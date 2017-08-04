@@ -52,7 +52,7 @@
 
         <!-- clone repository -->
         <gitclone
-                repository="git@git.brightsolutions.de:dirk.peter/libsass-setup.git"
+                repository="git@git.brightsolutions.de:drupal/theme-base.git"
                 targetPath="${project.basedir}/docroot/themes/custom/${theme_name}" />
 
         <!-- Remove .git folder -->
