@@ -3,8 +3,7 @@
 
     <!-- ### Setup Phing Drush integration -->
     <target name="setup-phing-drush" depends="load-properties" description="Sets up Phing Drush module ">
-        <!-- Register as custom Phing task -->
-        <taskdef name="drush" classname="DrushTask" classpath="${project.basedir}/drush/contrib/phingdrushtask" />
+        <taskdef name="drush" classname="Drush\Task" />
 
         <if>
             <equals arg1="${drupal.env}" arg2="local-vm" />
@@ -25,14 +24,20 @@
 
             <!-- ### Load properties -->
     <target name="load-properties" description="Load build properties from file build.properties">
-        <!-- Define project.drupal.dir property -->
-        <property name="project.drupal.dir" value="${project.basedir}/docroot" />
-
         <php function="dirname" returnProperty="phing.dir">
             <param value="${phing.file}"/>
         </php>
 
-        <property name="project.basedir" value="${phing.dir}" />
+        <property name="project.basedir" value="${phing.dir}" override="true">
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="\\" replace="/" ignoreCase="true"/>
+                </replaceregexp>
+            </filterchain>
+        </property>
+
+        <!-- Define project.drupal.dir property -->
+        <property name="project.drupal.dir" value="${project.basedir}/docroot" />
 
         <property name="drupal.version" value="8" />
         <property name="drupal.profile" value="minimal" />

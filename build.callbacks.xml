@@ -101,8 +101,8 @@
 
         <if>
             <equals arg1="${drupal.env}" arg2="live" />
-            <then> <exec passthru="true" command="${project.basedir}/.bin/composer install --no-dev"/> </then>
-            <else> <exec passthru="true" command="${project.basedir}/.bin/composer install"/> </else>
+            <then> <exec passthru="true" command="php ${project.basedir}/.bin/composer install --no-dev"/> </then>
+            <else> <exec passthru="true" command="php ${project.basedir}/.bin/composer install" /> </else>
         </if>
     </target>
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Bright Solutions - Default Phing Tasks" default="Default:install" phingVersion="2.4.11">
 
-    <taskdef name="drush" classname="Drush\Task" />
-
     <import file="vendor/brightsolutions/phing-tasks/build.common.xml"/>
     <import file="vendor/brightsolutions/phing-tasks/build.test.xml"/>
     <import file="vendor/brightsolutions/phing-tasks/build.callbacks.xml"/>
