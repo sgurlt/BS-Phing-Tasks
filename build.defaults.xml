@@ -40,7 +40,17 @@
 
                 <!-- Enable always required modules / themes -->
                 <phingcall target="drupal:enable-module">
-                    <property name="module" value="admin_toolbar, admin_toolbar_tools, backup_migrate, coffee, responsive_preview, seven" />
+                    <property name="module" value="admin_toolbar,
+                    admin_toolbar_tools,
+                    backup_migrate,
+                    coffee,
+                    linkit,
+                    token,
+                    metatag,
+                    simple_sitemap,
+                    ultimate_cron,
+                    responsive_preview,
+                    seven" />
                 </phingcall>
 
                 <!-- Set Seven as the admin theme and remove unnecessary blocks. -->
