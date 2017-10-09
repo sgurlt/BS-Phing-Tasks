@@ -20,7 +20,7 @@
     <target name="drupal:site-install-config-import"
             description="Installs Drupal and imports configuration.">
         <drush command="site-install" assume="yes">
-            <option name="config-dir">sites/default/config</option>
+            <option name="config-dir">../config</option>
             <option name="site-name">${drupal.sitename}</option>
             <option name="site-mail">${drupal.mail}</option>
             <option name="account-name">${drupal.admin_name}</option>
