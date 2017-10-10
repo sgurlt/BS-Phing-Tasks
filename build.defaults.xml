@@ -50,7 +50,8 @@
                     simple_sitemap,
                     ultimate_cron,
                     responsive_preview,
-                    editor" />
+                    editor,
+                    ckeditor" />
                 </phingcall>
 
                 <!-- Enable always required themes -->
