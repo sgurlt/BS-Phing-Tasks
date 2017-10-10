@@ -49,7 +49,8 @@
                     metatag,
                     simple_sitemap,
                     ultimate_cron,
-                    responsive_preview" />
+                    responsive_preview,
+                    editor" />
                 </phingcall>
 
                 <!-- Enable always required themes -->
