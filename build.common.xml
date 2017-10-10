@@ -17,6 +17,9 @@
             </else>
         </if>
 
+        <!-- The Drush color must be set since drush 9.x -->
+        <property name="drush.color" value="white"/>
+
         <!-- Define local drush execute file -->
         <property name="drush.bin" value="${project.basedir}/.bin/drush"/>
     </target>
