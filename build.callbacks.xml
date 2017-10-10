@@ -260,7 +260,7 @@
         </drush>
     </target>
 
-    <!-- Enable modules / themes -->
+    <!-- Enable modules -->
     <target name="drupal:enable-module" depends="setup-phing-drush" description="Enables one or multiple Drupal modules">
         <if>
             <not><isset property="module" /></not>
@@ -274,7 +274,7 @@
         </drush>
     </target>
 
-    <!-- Uninstall modules / themes -->
+    <!-- Uninstall modules -->
     <target name="drupal:uninstall-module" depends="setup-phing-drush" description="Uninstalls one or multiple Drupal modules">
         <if>
             <not><isset property="module" /></not>
@@ -285,6 +285,34 @@
 
         <drush command="pm-uninstall" assume="yes">
             <param>${module}</param>
+        </drush>
+    </target>
+
+    <!-- Enable themes -->
+    <target name="drupal:enable-theme" depends="setup-phing-drush" description="Enables one or multiple Drupal themes">
+        <if>
+            <not><isset property="theme" /></not>
+            <then>
+                <input message="Enter a comma separated list of theme machine names which should be enabled" propertyName="theme"/>
+            </then>
+        </if>
+
+        <drush command="then" assume="yes">
+            <param>${theme}</param>
+        </drush>
+    </target>
+
+    <!-- Uninstall themes -->
+    <target name="drupal:uninstall-theme" depends="setup-phing-drush" description="Uninstalls one or multiple Drupal themes">
+        <if>
+            <not><isset property="theme" /></not>
+            <then>
+                <input message="Enter a comma separated list of theme machine names which should be uninstalled" propertyName="theme"/>
+            </then>
+        </if>
+
+        <drush command="thun" assume="yes">
+            <param>${theme}</param>
         </drush>
     </target>
 

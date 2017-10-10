@@ -38,7 +38,7 @@
                 <!-- Initial Drupal installation -->
                 <phingcall target="drupal:site-install"/>
 
-                <!-- Enable always required modules / themes -->
+                <!-- Enable always required modules -->
                 <phingcall target="drupal:enable-module">
                     <property name="module" value="admin_toolbar,
                     admin_toolbar_tools,
@@ -49,8 +49,12 @@
                     metatag,
                     simple_sitemap,
                     ultimate_cron,
-                    responsive_preview,
-                    seven" />
+                    responsive_preview" />
+                </phingcall>
+
+                <!-- Enable always required themes -->
+                <phingcall target="drupal:enable-theme">
+                    <property name="theme" value="seven" />
                 </phingcall>
 
                 <!-- Set Seven as the admin theme and remove unnecessary blocks. -->
