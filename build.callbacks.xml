@@ -6,7 +6,7 @@
     <!-- ### Install Drupal -->
     <target name="drupal:site-install"
             description="Installs Drupal">
-        <drush command="site-install" assume="yes">
+        <drush command="site:install" assume="yes">
             <option name="site-name">${drupal.sitename}</option>
             <option name="site-mail">${drupal.mail}</option>
             <option name="account-name">${drupal.admin_name}</option>
@@ -19,7 +19,7 @@
     <!-- ### Install Drupal and import configuration -->
     <target name="drupal:site-install-config-import"
             description="Installs Drupal and imports configuration.">
-        <drush command="site-install" assume="yes">
+        <drush command="site:install" assume="yes">
             <option name="config-dir">../config</option>
             <option name="site-name">${drupal.sitename}</option>
             <option name="site-mail">${drupal.mail}</option>
@@ -269,7 +269,7 @@
             </then>
         </if>
 
-        <drush command="pm-enable" assume="yes">
+        <drush command="pm:enable" assume="yes">
             <param>${module}</param>
         </drush>
     </target>
@@ -283,7 +283,7 @@
             </then>
         </if>
 
-        <drush command="pm-uninstall" assume="yes">
+        <drush command="pm:uninstall" assume="yes">
             <param>${module}</param>
         </drush>
     </target>
@@ -297,7 +297,7 @@
             </then>
         </if>
 
-        <drush command="then" assume="yes">
+        <drush command="theme:enable" assume="yes">
             <param>${theme}</param>
         </drush>
     </target>
@@ -311,7 +311,7 @@
             </then>
         </if>
 
-        <drush command="thun" assume="yes">
+        <drush command="theme:uninstall" assume="yes">
             <param>${theme}</param>
         </drush>
     </target>
@@ -327,7 +327,7 @@
             </then>
         </if>
 
-        <drush command="config-set" assume="yes">
+        <drush command="config:set" assume="yes">
             <param>${config-name}</param>
             <param>${key}</param>
             <param>${value}</param>
@@ -343,7 +343,7 @@
             </then>
         </if>
 
-        <drush command="config-delete" assume="yes">
+        <drush command="config:delete" assume="yes">
             <param>${config-name}</param>
         </drush>
     </target>

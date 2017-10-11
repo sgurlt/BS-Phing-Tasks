@@ -150,15 +150,15 @@
             description="Composer install, update datebase, update entites, config import, translation import.">
 
         <phingcall target="composer:install"/>
-        <drush command="updb" assume="yes" />
-        <drush command="entity-updates" assume="yes" />
-        <drush command="config-import" assume="yes">
+        <drush command="updatedb" assume="yes" />
+        <drush command="entity:updates" assume="yes" />
+        <drush command="config:import" assume="yes">
             <param>staging</param>
         </drush>
 
         <!-- Include the below call if you have to work with translations within this project. -->
         <!-- <phingcall target="drupal:config:import-translations"/> -->
-        <drush command="cache-rebuild"/>
+        <drush command="cache:rebuild"/>
     </target>
 
     <!-- Export the active configuration and translations -->
