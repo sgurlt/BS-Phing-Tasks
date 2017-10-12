@@ -51,12 +51,8 @@
                     ultimate_cron,
                     responsive_preview,
                     editor,
-                    ckeditor" />
-                </phingcall>
-
-                <!-- Enable always required themes -->
-                <phingcall target="drupal:enable-theme">
-                    <property name="theme" value="seven" />
+                    ckeditor,
+                    seven" />
                 </phingcall>
 
                 <!-- Set Seven as the admin theme and remove unnecessary blocks. -->
