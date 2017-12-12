@@ -32,7 +32,7 @@
     <!-- ### Export active configuration -->
     <target name="drupal:config-export" description="Export the active configuration.">
         <drush command="config-export" assume="yes">
-            <param>staging</param>
+            <param>base</param>
         </drush>
     </target>
 
