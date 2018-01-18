@@ -145,11 +145,6 @@
         <drush command="uli" />
     </target>
 
-    <target name="test:print">
-        <echo message="${dirs}" />
-    </target>
-
-
     <target name="Default:update" depends="setup-phing-drush"
             description="Composer install, update datebase, update entites, config import, translation import.">
 
