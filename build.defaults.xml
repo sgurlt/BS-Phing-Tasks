@@ -5,6 +5,9 @@
     <import file="vendor/brightsolutions/phing-tasks/build.test.xml"/>
     <import file="vendor/brightsolutions/phing-tasks/build.callbacks.xml"/>
 
+    <includepath classpath="vendor/brightsolutions/phing-tasks/src/helpers" />
+    <taskdef name="phpVariable" classname="PhpVariableTask" />
+
     <!-- ### Install Drupal and import configurations. Also contains the initial Drupal project setup. -->
     <target name="Default:install"
             depends="composer:install,
@@ -142,14 +145,21 @@
         <drush command="uli" />
     </target>
 
+    <target name="test:print">
+        <echo message="${dirs}" />
+    </target>
+
+
     <target name="Default:update" depends="setup-phing-drush"
             description="Composer install, update datebase, update entites, config import, translation import.">
+
+        <input message="Enter the name if the configuration you want to import." propertyName="config-name" defaultValue="base"/>
 
         <phingcall target="composer:install"/>
         <drush command="updb" assume="yes" />
         <drush command="entity-updates" assume="yes" />
         <drush command="config-import" assume="yes">
-            <param>staging</param>
+            <param>${config-name}</param>
         </drush>
 
         <!-- Include the below call if you have to work with translations within this project. -->
