@@ -148,7 +148,12 @@
     <target name="Default:update" depends="setup-phing-drush"
             description="Composer install, update datebase, update entites, config import, translation import.">
 
-        <input message="Enter the name if the configuration you want to import." propertyName="config-name" defaultValue="base"/>
+        <if>
+            <not><isset property="config_name" /></not>
+            <then>
+                <input message="Enter the name if the configuration you want to import." propertyName="config_name" defaultValue="base"/>
+            </then>
+        </if>
 
         <phingcall target="composer:install"/>
         <drush command="updb" assume="yes" />

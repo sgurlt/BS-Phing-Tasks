@@ -9,8 +9,8 @@ Repository section:
 
 ```JSON
 {
-    "type": "vcs",
-    "url":  "git@git.brightsolutions.de:drupal/bs-phing-tasks.git"
+    "type": "git",
+    "url":  "git@github.com:sgurlt/bs-phing-tasks.git"
 }
 ```
 
@@ -18,7 +18,7 @@ Require package section:
 
 ```JSON
 {
-    "brightsolutions/phing-tasks": "1.x-dev"
+    "brightsolutions/phing-tasks": "~8.0",
 }
 ```
 
