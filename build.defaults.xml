@@ -148,6 +148,7 @@
     <target name="Default:update" depends="setup-phing-drush"
             description="Composer install, update datebase, update entites, config import, translation import.">
 
+        <!-- Check if config_name is already set. -->
         <if>
             <not><isset property="config_name" /></not>
             <then>
@@ -159,7 +160,7 @@
         <drush command="updb" assume="yes" />
         <drush command="entity-updates" assume="yes" />
         <drush command="config-import" assume="yes">
-            <param>${config-name}</param>
+            <param>${config_name}</param>
         </drush>
 
         <!-- Include the below call if you have to work with translations within this project. -->
