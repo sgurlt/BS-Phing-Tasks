@@ -130,7 +130,7 @@
                 </if>
 
                 <!-- Initial language export -->
-                <phingcall target="Default:Language-Export" />
+                <phingcall target="Default:Translation-Export" />
 
                 <!-- Initial config export -->
                 <phingcall target="drupal:config-export" />
