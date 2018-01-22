@@ -7,8 +7,8 @@
     <property name="task_installation" value="Default:install" />
     <property name="task_export" value="Default:export" />
     <property name="task_update" value="Default:update" />
-    <property name="task_translation_export" value="Default:translation-export" />
-    <property name="task_translation_import" value="Default:translation-import" />
+    <property name="task_translation_export" value="Default:Translation-Export" />
+    <property name="task_translation_import" value="Default:Translation-Import" />
     <property name="task_php_code_test" value="Default:php-code-test" />
     <property name="task_php_code_fix" value="Default:php-code-fix" />
 
