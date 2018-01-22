@@ -166,7 +166,7 @@
         </drush>
 
         <!-- Import translations. -->
-         <phingcall target="drupal:import-translations"/>
+         <phingcall target="Default:Translation-Import"/>
 
         <drush command="cache-rebuild"/>
     </target>
