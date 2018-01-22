@@ -7,6 +7,8 @@
     <property name="task_installation" value="Default:install" />
     <property name="task_export" value="Default:export" />
     <property name="task_update" value="Default:update" />
+    <property name="task_translation_export" value="Default:translation-export" />
+    <property name="task_translation_import" value="Default:translation-import" />
     <property name="task_php_code_test" value="Default:php-code-test" />
     <property name="task_php_code_fix" value="Default:php-code-fix" />
 
@@ -23,6 +25,16 @@
     <target name="Update" depends="setup-phing-drush"
             description="Composer install, update datebase, update entites, config import, translation import.">
         <phingcall target="${task_update}" />
+    </target>
+
+    <target name="Translation-Export" depends="setup-phing-drush"
+            description="Update contrib translation and export interface translations.">
+        <phingcall target="${task_translation_export}" />
+    </target>
+
+    <target name="Translation-Import" depends="setup-phing-drush"
+            description="Import contrib und custom interface translations.">
+        <phingcall target="${task_translation_import}" />
     </target>
 
     <target name="PHP Code Test" depends="setup-phing-drush"

@@ -34,6 +34,9 @@
 
                 <!-- Install Drupal and import existing configuration. -->
                 <phingcall target="drupal:site-install-config-import"/>
+
+                <!-- Import translations. -->
+                <phingcall target="Default:Translation-Import" />
             </then>
             <else>
                 <!-- If the config folder does NOT exist: -->
@@ -126,8 +129,11 @@
                     </then>
                 </if>
 
+                <!-- Initial language export -->
+                <phingcall target="drupal:language-export" />
+
                 <!-- Initial config export -->
-                <phingcall target="drupal:config-export"/>
+                <phingcall target="drupal:config-export" />
             </else>
         </if>
 
@@ -136,10 +142,6 @@
 
         <!-- Set property to prevent target from being executed multiple times -->
         <property name="project.installed" value="true"/>
-
-        <!-- Import translation file on site install -->
-        <!-- Include the below call if you have to work with translations within this project. -->
-        <!-- <phingcall target="drupal:config:import-translations"/> -->
 
         <!-- Open the site after installation. -->
         <drush command="uli" />
@@ -163,16 +165,32 @@
             <param>${config_name}</param>
         </drush>
 
-        <!-- Include the below call if you have to work with translations within this project. -->
-        <!-- <phingcall target="drupal:config:import-translations"/> -->
+        <!-- Import translations. -->
+         <phingcall target="drupal:import-translations"/>
+
         <drush command="cache-rebuild"/>
     </target>
 
     <!-- Export the active configuration and translations -->
     <target name="Default:export" depends="setup-phing-drush" description="Export the active configuration and translations.">
         <phingcall target="drupal:config-export"/>
-        <!-- Include the below call if you have to work with translations within this project. -->
-        <!-- <phingcall target="drupal:config:export-translations"/> -->
+    </target>
+
+    <!-- Export translations -->
+    <target name="Default:Translation-Export"
+            depends="setup-phing-drush"
+            description="Run the drush commands to get the latest contrib translations and export them.">
+
+        <!-- Update translations for contrib modules. -->
+        <phingcall target="drupal:locale-update"/>
+
+        <!-- Export interface translations for all languages. -->
+        <drush command="language-export" />
+    </target>
+
+    <!-- Import translations -->
+    <target name="Default:Translation-Import" depends="setup-phing-drush" description="Import interface translations for all languages.">
+        <drush command="language-import" />
     </target>
 
     <!-- PHP Code Test -->

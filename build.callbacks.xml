@@ -3,7 +3,7 @@
 
     <import file="vendor/brightsolutions/phing-tasks/build.common.xml"/>
 
-    <!-- ### Install Drupal -->
+    <!-- Install Drupal -->
     <target name="drupal:site-install"
             description="Installs Drupal">
         <drush command="site-install" assume="yes">
@@ -16,7 +16,7 @@
         </drush>
     </target>
 
-    <!-- ### Install Drupal and import configuration -->
+    <!-- Install Drupal, import configuration and translations. -->
     <target name="drupal:site-install-config-import"
             description="Installs Drupal and imports configuration.">
         <drush command="site-install" assume="yes">
@@ -29,14 +29,14 @@
         </drush>
     </target>
 
-    <!-- ### Export active configuration -->
+    <!-- Export active configuration -->
     <target name="drupal:config-export" description="Export the active configuration.">
         <drush command="config-export" assume="yes">
             <param>base</param>
         </drush>
     </target>
 
-    <!-- ### Get latest changes from dev branch  -->
+    <!-- Get latest changes from dev branch  -->
     <target name="git:pull:dev" description="Get latest changes from dev branch">
         <exec passthru="true" command="git pull origin dev"/>
     </target>
@@ -89,7 +89,7 @@
         </reflexive>
     </target>
 
-    <!-- ### Reinstall packages from composer.json to remove all staff not defined in composer.json. -->
+    <!-- Reinstall packages from composer.json to remove all staff not defined in composer.json. -->
     <target name="composer:install" depends="load-properties" description="Install packages from composer.json">
 
         <if>
@@ -106,12 +106,12 @@
         </if>
     </target>
 
-    <!-- ### Update composer.lock file and install packages. -->
+    <!-- Update composer.lock file and install packages. -->
     <target name="composer:update" description="Update composer.lock file and install packages">
         <exec passthru="true" command="${project.basedir}/.bin/composer update"/>
     </target>
     
-    <!-- ### Initialize default site settings. -->
+    <!-- Initialize default site settings. -->
     <target name="settings-init" depends="load-properties" description="Initialize default site settings">
 
         <if>
@@ -209,7 +209,7 @@
 
     </target>
 
-    <!-- ### Setup permissions -->
+    <!-- Setup permissions -->
     <target name="setup-dirs-permissions" depends="load-properties" description="Set file permissions after build.">
 
         <!-- Allow write access to files directory. -->
@@ -230,34 +230,10 @@
         </chmod>
     </target>
 
-    <!-- ### Update translations for contrib modules -->
+    <!-- Update translations for contrib modules -->
     <target name="drupal:locale-update"
             description="Update translations for contrib modules">
         <drush command="locale-update" />
-    </target>
-
-
-    <!-- ### Export translations -->
-    <target name="drupal:config:export-translations"
-            depends="setup-phing-drush"
-            description="Run the drush commands to get the latest contrib translations and export them with your custom translations to the projects .po file">
-
-        <!-- Update translations for contrib modules-->
-        <phingcall target="drupal:locale-update"/>
-
-        <drush command="language-export">
-            <param>de</param>
-            <param>sites/default/translation/DE.po</param>
-        </drush>
-    </target>
-
-    <!-- ### Import translations -->
-    <target name="drupal:config:import-translations" depends="setup-phing-drush" description="Run the drush commands to import the projects .po file">
-        <drush command="language-import">
-            <param>de</param>
-            <param>sites/default/translation/DE.po</param>
-            <option name="replace"/>
-        </drush>
     </target>
 
     <!-- Enable modules -->
