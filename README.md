@@ -24,4 +24,4 @@ Require package section:
 
 Afterwards just run `composer install`.
 
-Further explanation about the Phing tasks could be found in the Bright Solutions Drupal Template README.md file: https://git.brightsolutions.de/drupal/project-template/blob/d8/README.md
+Further explanation about the Phing tasks could be found in the Bright Solutions Drupal Template README.md file.
