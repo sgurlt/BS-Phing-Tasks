@@ -19,8 +19,17 @@
     <!-- Install Drupal, import configuration and translations. -->
     <target name="drupal:site-install-config-import"
             description="Installs Drupal and imports configuration.">
+
+        <!-- Check if config_path is already set. -->
+        <if>
+            <not><isset property="config_path" /></not>
+            <then>
+                <input message="Enter the path to the configuration you want this installation to be based on relative to your docroot folder." propertyName="config_path" defaultValue="../config"/>
+            </then>
+        </if>
+
         <drush command="site-install" assume="yes">
-            <option name="config-dir">../config</option>
+            <option name="config-dir">${config_path}</option>
             <option name="site-name">${drupal.sitename}</option>
             <option name="site-mail">${drupal.mail}</option>
             <option name="account-name">${drupal.admin_name}</option>
