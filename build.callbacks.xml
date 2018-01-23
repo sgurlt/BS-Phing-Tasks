@@ -29,13 +29,6 @@
         </drush>
     </target>
 
-    <!-- Export active configuration -->
-    <target name="drupal:config-export" description="Export the active configuration.">
-        <drush command="config-export" assume="yes">
-            <param>base</param>
-        </drush>
-    </target>
-
     <!-- Get latest changes from dev branch  -->
     <target name="git:pull:dev" description="Get latest changes from dev branch">
         <exec passthru="true" command="git pull origin dev"/>

@@ -133,7 +133,7 @@
                 <phingcall target="Default:Translation-Export" />
 
                 <!-- Initial config export -->
-                <phingcall target="drupal:config-export" />
+                <phingcall target="Default:export" />
             </else>
         </if>
 
@@ -154,7 +154,7 @@
         <if>
             <not><isset property="config_name" /></not>
             <then>
-                <input message="Enter the name if the configuration you want to import." propertyName="config_name" defaultValue="base"/>
+                <input message="Enter the name of the configuration you want to import." propertyName="config_name" defaultValue="base"/>
             </then>
         </if>
 
@@ -172,8 +172,19 @@
     </target>
 
     <!-- Export the active configuration and translations -->
-    <target name="Default:export" depends="setup-phing-drush" description="Export the active configuration and translations.">
-        <phingcall target="drupal:config-export"/>
+    <target name="Default:export" depends="setup-phing-drush" description="Export the active configuration.">
+
+        <!-- Check if config_name is already set. -->
+        <if>
+            <not><isset property="config_name" /></not>
+            <then>
+                <input message="Enter the name of the configuration you want to export." propertyName="config_name" defaultValue="base"/>
+            </then>
+        </if>
+
+        <drush command="config-export">
+            <param>${config_name}</param>
+        </drush>
     </target>
 
     <!-- Export translations -->
