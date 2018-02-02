@@ -58,6 +58,7 @@
                     responsive_preview,
                     editor,
                     ckeditor,
+                    locale,
                     seven" />
                 </phingcall>
 
