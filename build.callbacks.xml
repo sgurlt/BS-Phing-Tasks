@@ -36,6 +36,9 @@
             <option name="account-mail">${drupal.mail}</option>
             <param>${drupal.profile}</param>
         </drush>
+
+        <!-- Rebuild cache after installation. -->
+        <drush command="cr" />
     </target>
 
     <!-- Get latest changes from dev branch  -->
