@@ -155,7 +155,7 @@
         <if>
             <not><isset property="config_name" /></not>
             <then>
-                <input message="Enter the name of the configuration you want to import." propertyName="config_name" defaultValue="base"/>
+                <input message="Enter the name of the configuration you want to import." propertyName="config_name" defaultValue="sync"/>
             </then>
         </if>
 
@@ -179,7 +179,7 @@
         <if>
             <not><isset property="config_name" /></not>
             <then>
-                <input message="Enter the name of the configuration you want to export." propertyName="config_name" defaultValue="base"/>
+                <input message="Enter the name of the configuration you want to export." propertyName="config_name" defaultValue="sync"/>
             </then>
         </if>
 
