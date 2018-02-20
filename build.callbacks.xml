@@ -96,7 +96,6 @@
 
     <!-- Reinstall packages from composer.json to remove all staff not defined in composer.json. -->
     <target name="composer:install" depends="load-properties" description="Install packages from composer.json">
-
         <if>
             <not><available file="${project.basedir}/.bin/composer"/></not>
             <then>
@@ -136,28 +135,6 @@
                                 <expandproperties />
                             </filterchain>
                         </copy>
-                    </then>
-                </if>
-                <if>
-                    <and>
-                        <equals arg1="${drupal.env}" arg2="local-vm" />
-                        <not><available file="${project.basedir}/drupalvm/local.config.yml"/></not>
-                    </and>
-                    <then>
-                        <copy file="${project.basedir}/templates/local.config.template.yml" tofile="${project.basedir}/drupalvm/local.config.yml">
-                            <filterchain>
-                                <expandproperties />
-                            </filterchain>
-                        </copy>
-                    </then>
-                </if>
-                <if>
-                    <and>
-                        <isset property="drupal.vhost" />
-                        <not><available file="${project.drupal.dir}/drush/drushrc.php"/></not>
-                    </and>
-                    <then>
-                        <copy file="${project.basedir}/templates/drushrc.template.php" tofile="${project.drupal.dir}/drush/drushrc.php" />
                     </then>
                 </if>
                 <if>

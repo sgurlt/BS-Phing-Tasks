@@ -14,7 +14,7 @@
     </target>
 
 
-            <!-- ### Load properties -->
+    <!-- ### Load properties -->
     <target name="load-properties" description="Load build properties from file build.properties">
         <php function="dirname" returnProperty="phing.dir">
             <param value="${phing.file}"/>
@@ -30,10 +30,8 @@
 
         <!-- Define project.drupal.dir property -->
         <property name="project.drupal.dir" value="${project.basedir}/docroot" />
-
         <property name="drupal.version" value="8" />
         <property name="drupal.profile" value="minimal" />
-
         <property name="drupal.db.prefix" value="" />
 
         <if>
