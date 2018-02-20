@@ -154,14 +154,10 @@
                 <if>
                     <and>
                         <isset property="drupal.vhost" />
-                        <not><available file="${project.drupal.dir}/sites/all/drush/drushrc.php"/></not>
+                        <not><available file="${project.drupal.dir}/drush/drushrc.php"/></not>
                     </and>
                     <then>
-                        <copy file="${project.basedir}/templates/drushrc.template.php" tofile="${project.drupal.dir}/sites/all/drush/drushrc.php">
-                            <filterchain>
-                                <expandproperties />
-                            </filterchain>
-                        </copy>
+                        <copy file="${project.basedir}/templates/drushrc.template.php" tofile="${project.drupal.dir}/drush/drushrc.php" />
                     </then>
                 </if>
                 <if>

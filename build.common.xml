@@ -4,18 +4,7 @@
     <!-- ### Setup Phing Drush integration -->
     <target name="setup-phing-drush" depends="load-properties" description="Sets up Phing Drush module ">
         <taskdef name="drush" classname="Drush\Task" />
-
-        <if>
-            <equals arg1="${drupal.env}" arg2="local-vm" />
-            <then>
-                <!-- Set drush alias -->
-                <property name="drush.alias" value="@${drupal.vhost}"/>
-            </then>
-            <else>
-                <!-- Run drush from the project Drupal directory -->
-                <property name="drush.root" value="${project.drupal.dir}"/>
-            </else>
-        </if>
+        <property name="drush.root" value="${project.drupal.dir}"/>
 
         <!-- The Drush color must be set since drush 9.x -->
         <property name="drush.color" value="white"/>
