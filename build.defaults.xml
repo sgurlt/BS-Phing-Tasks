@@ -309,6 +309,10 @@
         <exec command="chown -R ${filesOwner}:${filesGroup} docroot/sites/${sitesSubdir}/files" />
         <exec command="chmod -R 0775 docroot/sites/${sitesSubdir}/files" />
 
+        <!-- Temporarily get write permissions for settings.php. -->
+        <echo msg="Temporarily get write permissions for the settings.php." />
+        <exec command="chmod 0775 docroot/sites/${sitesSubdir}/settings.php" />
+
         <!-- Set config dir in settings.php -->
         <echo msg="Set config dir in settings.php" />
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
@@ -321,6 +325,10 @@ $config_directories = [
         <echo msg="Set translation directory." />
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
         <echo msg="$settings['custom_translations_directory'] = 'sites/all/translations';${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+
+        <!-- Remove write permissions from settings.php. -->
+        <echo msg="Temporarily get write permissions for the settings.php." />
+        <exec command="chmod 0444 docroot/sites/${sitesSubdir}/settings.php" />
 
         <!-- Clear cache. -->
         <echo msg="Clear cache" />
