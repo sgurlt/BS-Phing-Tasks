@@ -312,6 +312,10 @@ $config_directories = [
   CONFIG_SYNC_DIRECTORY => '${configDir},'
 ];${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
 
+        <!-- Set translation directory. -->
+        <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+        <echo msg="$settings['custom_translations_directory'] = 'sites/all/translations';${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+
         <!-- Clear cache. -->
         <drush command="cr" />
 
