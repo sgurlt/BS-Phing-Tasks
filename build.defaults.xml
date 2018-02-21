@@ -305,6 +305,13 @@
         <exec command="chown -R ${filesOwner}:${filesGroup} docroot/sites/${sitesSubdir}/files" />
         <exec command="chmod -R 0775 docroot/sites/${sitesSubdir}/files" />
 
+        <!-- Set config dir in settings.php -->
+        <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+        <echo msg="
+$config_directories = [
+  CONFIG_SYNC_DIRECTORY => '${configDir},'
+];${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+
         <!-- Clear cache. -->
         <drush command="cr" />
 
@@ -337,7 +344,7 @@
   'parent' => '@default',${line.separator}
 );${line.separator}"
               file="drush/local.aliases.drushrc.php" append="true"></echo>
-    </target>g
+    </target>
 
     <!-- PHP Code Test -->
     <target name="Default:php-code-test" description="Tests the projects custom php code.">
