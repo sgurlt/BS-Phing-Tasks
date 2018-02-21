@@ -274,4 +274,8 @@
         </drush>
     </target>
 
+    <!-- Multisites alias creation callback-->
+    <target name="setMultisiteAlias">
+        <echo msg="$sites['${alias}'] = '${sitesSubdir}';${line.separator}" file="docroot/sites/sites.php" append="true" />
+    </target>
 </project>

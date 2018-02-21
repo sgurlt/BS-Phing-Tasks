@@ -205,6 +205,140 @@
         <drush command="language-import" />
     </target>
 
+    <!-- Setup Multisite -->
+    <target name="Default:Setup-Multisite"  depends="setup-phing-drush"
+            description="Setup a new multisite instance.">
+
+        <!--
+            IMPORTANT: Drush site-install is currently having an issue with multisites and configuration import: https://github.com/drush-ops/drush/issues/3398
+            The issue is resolved by this pull request: https://github.com/drush-ops/drush/pull/3400.
+            The patch is included in our D8 default template.
+         -->
+
+        <!-- Setup Multisite -->
+        <!-- Required parameters:
+             - configDir
+             - sitesSubdir
+             - dbHost
+             - dbName
+             - dbUser
+             - dbPassword
+             - webserverUser
+             - addAlias (yes,no)
+
+             Optional parameters:
+             - urlAliases (comma separated)
+
+            Example execution: .bin/phing Default:Setup-Multisite -D configDir="../config" -D sitesSubdir="sub1.localhost" -D dbHost="mariabdb" -D dbName="sub1" -D dbUser="sub1_user" -D dbPassword="sub1_password" -D filesOwner="www-data" -D filesGroup="www-data" -D addAlias="yes" -D urlAliases="alias1"
+        -->
+        <if>
+            <not><isset property="configDir" /></not>
+            <then>
+                <input message="Enter the relativ path to the config that should be imported" propertyName="configDir" defaultValue="../config"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="sitesSubdir" /></not>
+            <then>
+                <input message="Enter the name of the new sites sub directory." propertyName="sitesSubdir"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="dbHost" /></not>
+            <then>
+                <input message="Enter the name of the database host." propertyName="dbHost" defaultValue="mariadb"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="dbName" /></not>
+            <then>
+                <input message="Enter the name of the database." propertyName="dbName"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="dbUser" /></not>
+            <then>
+                <input message="Enter database user." propertyName="dbUser"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="dbPassword" /></not>
+            <then>
+                <input message="Enter database user password." propertyName="dbPassword"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="filesOwner" /></not>
+            <then>
+                <input message="The user the files directory belongs to." propertyName="filesOwner"  defaultValue="www-data"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="filesGroup" /></not>
+            <then>
+                <input message="The user group the files directory belongs to." propertyName="filesGroup"  defaultValue="www-data"/>
+            </then>
+        </if>
+        <if>
+            <not><isset property="addAlias" /></not>
+            <then>
+                <input message="Do you want to enter one or multiple URL aliases for this multisite?" propertyName="addAlias" validArgs="yes,no" defaultValue="no"/>
+            </then>
+        </if>
+        <if>
+            <and>
+                <istrue value="${addAlias}"/>
+                <not><isset property="urlAliases" /></not>
+            </and>
+            <then>
+                <input message="Enter a comma separated list of aliases you want to add." propertyName="urlAliases"/>
+            </then>
+        </if>
+
+        <drush command="site-install" assume="yes">
+            <option name="config-dir">${configDir}</option>
+            <option name="sites-subdir">${sitesSubdir}</option>
+            <option name="db-url">mysql://${dbUser}:${dbPassword}@${dbHost}/${dbName}</option>
+        </drush>
+
+        <!-- Set user and permissions for files directory. -->
+        <exec command="chown -R ${filesOwner}:${filesGroup} docroot/sites/${sitesSubdir}/files" />
+        <exec command="chmod -R 0775 docroot/sites/${sitesSubdir}/files" />
+
+        <!-- Clear cache. -->
+        <drush command="cr" />
+
+        <!-- Setup sites.php aliases -->
+        <echo msg="${line.separator}# Aliases for ${sitesSubdir}${line.separator}" file="docroot/sites/sites.php" append="true" />
+        <!-- The default alias should always be set. -->
+        <phingcall target="setMultisiteAlias">
+            <property name="alias" value="${sitesSubdir}" />
+        </phingcall>
+        <!-- Set additional aliases -->
+        <if>
+            <istrue value="${addAlias}"/>
+            <then>
+                <foreach list="${urlAliases}" param="alias" target="setMultisiteAlias" delimiter="," />
+            </then>
+        </if>
+
+        <!-- Setup Drush Alias -->
+        <if>
+            <not><available file='drush/local.aliases.drushrc.php' type='file' /></not>
+            <then>
+                <copy file="templates/local.aliases.drushrc.template.php"
+                      tofile="drush/local.aliases.drushrc.php" />
+            </then>
+        </if>
+        <echo msg="${line.separator}// Drush alias for ${sitesSubdir}${line.separator}" file="drush/local.aliases.drushrc.php" append="true" />
+        <echo msg=
+                      "$aliases['${sitesSubdir}'] = array(${line.separator}
+  'uri' => '${sitesSubdir}',${line.separator}
+  'parent' => '@default',${line.separator}
+);${line.separator}"
+              file="drush/local.aliases.drushrc.php" append="true"></echo>
+    </target>g
+
     <!-- PHP Code Test -->
     <target name="Default:php-code-test" description="Tests the projects custom php code.">
         <input propertyName="test_scope"

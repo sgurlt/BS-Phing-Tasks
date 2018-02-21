@@ -37,6 +37,11 @@
         <phingcall target="${task_translation_import}" />
     </target>
 
+    <target name="Setup Multisite" depends="setup-phing-drush"
+            description="Setup a new multisite instance">
+        <phingcall target="${task_setup_multisite}" />
+    </target>
+
     <target name="PHP Code Test" depends="setup-phing-drush"
             description="Tests the projects custom php code.">
         <phingcall target="${task_php_code_test}" />
