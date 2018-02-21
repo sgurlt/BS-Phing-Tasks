@@ -296,6 +296,8 @@
             </then>
         </if>
 
+        <!-- Start site installation -->
+        <echo msg="Start site installation" />
         <drush command="site-install" assume="yes">
             <option name="config-dir">${configDir}</option>
             <option name="sites-subdir">${sitesSubdir}</option>
@@ -303,10 +305,12 @@
         </drush>
 
         <!-- Set user and permissions for files directory. -->
+        <echo msg="Set user and permissions for files directory." />
         <exec command="chown -R ${filesOwner}:${filesGroup} docroot/sites/${sitesSubdir}/files" />
         <exec command="chmod -R 0775 docroot/sites/${sitesSubdir}/files" />
 
         <!-- Set config dir in settings.php -->
+        <echo msg="Set config dir in settings.php" />
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
         <echo msg="
 $config_directories = [
@@ -314,13 +318,16 @@ $config_directories = [
 ];${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
 
         <!-- Set translation directory. -->
+        <echo msg="Set translation directory." />
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
         <echo msg="$settings['custom_translations_directory'] = 'sites/all/translations';${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
 
         <!-- Clear cache. -->
+        <echo msg="Clear cache" />
         <drush command="cr" />
 
         <!-- Setup sites.php aliases -->
+        <echo msg="Setup sites.php aliases" />
         <echo msg="${line.separator}# Aliases for ${sitesSubdir}${line.separator}" file="docroot/sites/sites.php" append="true" />
         <!-- The default alias should always be set. -->
         <phingcall target="setMultisiteAlias">
@@ -335,6 +342,7 @@ $config_directories = [
         </if>
 
         <!-- Setup Drush Alias -->
+        <echo msg="Setup Drush Alias" />
         <if>
             <not><available file='drush/local.aliases.drushrc.php' type='file' /></not>
             <then>
@@ -343,12 +351,11 @@ $config_directories = [
             </then>
         </if>
         <echo msg="${line.separator}// Drush alias for ${sitesSubdir}${line.separator}" file="drush/local.aliases.drushrc.php" append="true" />
-        <echo msg=
-                      "$aliases['${sitesSubdir}'] = array(${line.separator}
+        <echo msg="
+$aliases['${sitesSubdir}'] = array(${line.separator}
   'uri' => '${sitesSubdir}',${line.separator}
   'parent' => '@default',${line.separator}
-);${line.separator}"
-              file="drush/local.aliases.drushrc.php" append="true"></echo>
+);${line.separator}" file="drush/local.aliases.drushrc.php" append="true" />
     </target>
 
     <!-- PHP Code Test -->
