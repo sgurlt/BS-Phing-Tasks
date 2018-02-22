@@ -304,15 +304,17 @@
             <option name="db-url">mysql://${dbUser}:${dbPassword}@${dbHost}/${dbName}</option>
         </drush>
 
+        <!-- Set sites subdir permissions. -->
+        <echo msg="Set sites subdir permissions." />
+        <exec command="chmod 0775 docroot/sites/${sitesSubdir}" />
+
         <!-- Set user and permissions for files directory. -->
         <echo msg="Set user and permissions for files directory." />
         <exec command="chown -R ${filesOwner}:${filesGroup} docroot/sites/${sitesSubdir}/files" />
         <exec command="chmod -R 0775 docroot/sites/${sitesSubdir}/files" />
 
-        <!-- Temporarily get write permissions for settings.php and sitesDir. -->
-        <echo msg="Temporarily get write permissions for the settings.php." />
-        <exec command="chmod 0775 docroot/sites/${sitesSubdir}/settings.php" />
-        <exec command="chmod 0775 docroot/sites/${sitesSubdir}" />
+        <!-- Temporarily set write permissions for settings.php. -->
+        <exec command="chmod 0777 docroot/sites/${sitesSubdir}/settings.php" />
 
         <!-- Set config dir in settings.php -->
         <echo msg="Set config dir in settings.php" />
@@ -327,10 +329,9 @@ $config_directories = [${line.separator}
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
         <echo msg="$settings['custom_translations_directory'] = 'sites/all/translations';${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
 
-        <!-- Remove write permissions from settings.php and sitesDir -->
-        <echo msg="Remove write permissions from settings.php" />
+        <!-- Remove write permissions from settings.php and sitesDir. -->
+        <echo msg="Remove write permissions from settings.php and sitesDir." />
         <exec command="chmod 0444 docroot/sites/${sitesSubdir}/settings.php" />
-        <exec command="chmod 0555 docroot/sites/${sitesSubdir}" />
 
         <!-- Clear cache. -->
         <echo msg="Clear cache" />
