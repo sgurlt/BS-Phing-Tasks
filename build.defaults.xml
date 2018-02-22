@@ -365,7 +365,7 @@ $config_directories = [${line.separator}
         <echo msg="
 $aliases['${sitesSubdir}'] = array(${line.separator}
   'uri' => '${sitesSubdir}',${line.separator}
-  'parent' => '@default',${line.separator}
+  'parent' => '@local.default',${line.separator}
 );${line.separator}" file="drush/local.aliases.drushrc.php" append="true" />
     </target>
 
