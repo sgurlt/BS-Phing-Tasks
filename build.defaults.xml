@@ -321,7 +321,7 @@
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
         <echo msg="
 $config_directories = [${line.separator}
-  CONFIG_SYNC_DIRECTORY => '${configDir},'${line.separator}
+  CONFIG_SYNC_DIRECTORY => '${configDir}'${line.separator}
 ];${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
 
         <!-- Set translation directory. -->
