@@ -269,6 +269,12 @@
             </then>
         </if>
         <if>
+            <not><isset property="translationDirectory" /></not>
+            <then>
+                <input message="Enter the path where your .po files are located." propertyName="translationDirectory" defaultValue="sites/all/translations"/>
+            </then>
+        </if>
+        <if>
             <not><isset property="filesOwner" /></not>
             <then>
                 <input message="The user the files directory belongs to." propertyName="filesOwner"  defaultValue="www-data"/>
@@ -327,7 +333,7 @@ $config_directories = [${line.separator}
         <!-- Set translation directory. -->
         <echo msg="Set translation directory." />
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
-        <echo msg="$settings['custom_translations_directory'] = 'sites/all/translations';${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+        <echo msg="$settings['custom_translations_directory'] = '${translationDirectory}';${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
 
         <!-- Remove write permissions from settings.php and sitesDir. -->
         <echo msg="Remove write permissions from settings.php and sitesDir." />
