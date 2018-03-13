@@ -226,11 +226,12 @@
              - filesOwner
              - filesGroup
              - addAlias (yes,no)
+             - translationDirectory
 
              Optional parameters:
              - urlAliases (comma separated)
 
-            Example execution: .bin/phing Default:Setup-Multisite -D configDir="../config" -D sitesSubdir="sub1.localhost" -D dbHost="mariabdb" -D dbName="sub1" -D dbUser="sub1_user" -D dbPassword="sub1_password" -D filesOwner="www-data" -D filesGroup="www-data" -D addAlias="yes" -D urlAliases="alias1"
+            Example execution: .bin/phing Default:Setup-Multisite -D configDir="../config" -D sitesSubdir="sub1.localhost" -D dbHost="mariabdb" -D dbName="sub1" -D dbUser="sub1_user" -D dbPassword="sub1_password" -D filesOwner="www-data" -D filesGroup="www-data" -D addAlias="yes" -D urlAliases="alias1" -D translationDirectory="../translations"
         -->
         <if>
             <not><isset property="configDir" /></not>
@@ -339,10 +340,6 @@ $config_directories = [${line.separator}
         <echo msg="Remove write permissions from settings.php and sitesDir." />
         <exec command="chmod 0444 docroot/sites/${sitesSubdir}/settings.php" />
 
-        <!-- Clear cache. -->
-        <echo msg="Clear cache" />
-        <drush command="cr" />
-
         <!-- Setup sites.php aliases -->
         <echo msg="Setup sites.php aliases" />
         <echo msg="${line.separator}# Aliases for ${sitesSubdir}${line.separator}" file="docroot/sites/sites.php" append="true" />
@@ -373,6 +370,14 @@ $aliases['${sitesSubdir}'] = array(${line.separator}
   'uri' => '${sitesSubdir}',${line.separator}
   'parent' => '@local.default',${line.separator}
 );${line.separator}" file="drush/local.aliases.drushrc.php" append="true" />
+
+        <!-- Import translations -->
+        <echo msg="Import translations" />
+        <phingcall target="Default:Translation-Import" />
+
+        <!-- Clear cache. -->
+        <echo msg="Clear cache" />
+        <drush command="cr" />
     </target>
 
     <!-- PHP Code Test -->
