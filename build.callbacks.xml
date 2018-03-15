@@ -252,12 +252,24 @@
                 <input message="Enter the value for the config you want to set." propertyName="value"/>
             </then>
         </if>
-
-        <drush command="config-set" assume="yes">
-            <param>${config-name}</param>
-            <param>${key}</param>
-            <param>${value}</param>
-        </drush>
+        
+        <if>
+            <not><isset property="site" /></not>
+            <then>
+                <drush command="config-set" assume="yes">
+                    <param>${config-name}</param>
+                    <param>${key}</param>
+                    <param>${value}</param>
+                </drush>
+            </then>
+            <else>
+				<drush command="@${site} config-set" assume="yes">
+                    <param>${config-name}</param>
+                    <param>${key}</param>
+                    <param>${value}</param>
+                </drush>
+			</else>
+        </if>
     </target>
 
     <!-- Delete config -->
