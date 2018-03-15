@@ -377,7 +377,7 @@ $aliases['${sitesSubdir}'] = array(${line.separator}
 
         <!-- Clear cache. -->
         <echo msg="Clear cache" />
-        <drush command="cr" />
+        <drush command="@local.${sitesSubdir} cr" />
     </target>
 
     <!-- PHP Code Test -->
