@@ -231,7 +231,7 @@
              Optional parameters:
              - urlAliases (comma separated)
 
-            Example execution: .bin/phing Default:Setup-Multisite -D configDir="../config" -D sitesSubdir="sub1.localhost" -D dbHost="mariabdb" -D dbName="sub1" -D dbUser="sub1_user" -D dbPassword="sub1_password" -D filesOwner="www-data" -D filesGroup="www-data" -D addAlias="yes" -D urlAliases="alias1" -D translationDirectory="../translations"
+            Example execution: .bin/phing Default:Setup-Multisite -D configDir="../config" -D sitesSubdir="sub1.localhost" -D dbHost="mariadb" -D dbName="sub1" -D dbUser="root" -D dbPassword="root" -D filesOwner="www-data" -D filesGroup="www-data" -D addAlias="yes" -D urlAliases="alias1" -D translationDirectory="../translations"
         -->
         <if>
             <not><isset property="configDir" /></not>
@@ -260,13 +260,13 @@
         <if>
             <not><isset property="dbUser" /></not>
             <then>
-                <input message="Enter database user." propertyName="dbUser"/>
+                <input message="Enter database root user." propertyName="dbUser"/>
             </then>
         </if>
         <if>
             <not><isset property="dbPassword" /></not>
             <then>
-                <input message="Enter database user password." propertyName="dbPassword"/>
+                <input message="Enter database root user password." propertyName="dbPassword"/>
             </then>
         </if>
         <if>
@@ -303,12 +303,33 @@
             </then>
         </if>
 
+        <!-- Creating random user/pw combination for the subsite's database -->
+        <php expression="substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(16/strlen($x)))), 1, 16);" returnProperty="subSiteUser" />
+        <php expression="substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(16/strlen($x)))), 1, 16);" returnProperty="subSitePassword" />
+
+        <!-- Creating database user and granting permissions -->
+
+        <!-- This file is temporary and will be deleted after execution -->
+        <echo file="${project.basedir}/data/create.sql">
+            CREATE USER '${subSiteUser}'@'${dbHost}' IDENTIFIED BY '${subSitePassword}';
+            GRANT USAGE ON *.* TO '${subSiteUser}'@'%' IDENTIFIED BY '${subSitePassword}';
+            GRANT UPDATE,CREATE,REFERENCES,ALTER,LOCK TABLES,CREATE VIEW,CREATE
+            ROUTINE,TRIGGER,INSERT,DELETE,DROP,INDEX,CREATE TEMPORARY TABLES,EXECUTE,SHOW VIEW,ALTER ROUTINE,SELECT ON
+            `${dbName}`.* TO '${subSiteUser}'@'%';
+        </echo>
+
+        <pdosqlexec url="mysql:host=${dbHost}" userid="${dbUser}" password="${dbPassword}">
+            <transaction src="${project.basedir}/data/create.sql"/>
+        </pdosqlexec>
+
+        <delete file="${project.basedir}/data/create.sql" quiet="true"/>
+
         <!-- Start site installation -->
         <echo msg="Start site installation" />
         <drush command="site-install" assume="yes">
             <option name="config-dir">${configDir}</option>
             <option name="sites-subdir">${sitesSubdir}</option>
-            <option name="db-url">mysql://${dbUser}:${dbPassword}@${dbHost}/${dbName}</option>
+            <option name="db-url">mysql://${subSiteUser}:${subSitePassword}@${dbHost}/${dbName}</option>
         </drush>
 
         <!-- Set sites subdir permissions. -->
