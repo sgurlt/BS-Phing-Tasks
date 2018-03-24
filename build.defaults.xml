@@ -59,7 +59,8 @@
                     editor,
                     ckeditor,
                     locale,
-                    seven" />
+                    seven,
+                    drush_language" />
                 </phingcall>
 
                 <!-- Set Seven as the admin theme and remove unnecessary blocks. -->
