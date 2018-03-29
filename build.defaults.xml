@@ -261,7 +261,7 @@
         <if>
             <not><isset property="dbUser" /></not>
             <then>
-                <input message="Enter database root user." propertyName="dbUser"/>
+                <input message="Enter database root user. The root user will generate a new mysql user that will be used for the database connection." propertyName="dbUser"/>
             </then>
         </if>
         <if>
