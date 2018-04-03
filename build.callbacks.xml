@@ -290,4 +290,9 @@
     <target name="setMultisiteAlias">
         <echo msg="$sites['${alias}'] = '${sitesSubdir}';${line.separator}" file="docroot/sites/sites.php" append="true" />
     </target>
+    
+    <!-- Multisites trusted hosts creation callback-->
+    <target name="setMultisiteTrustedHost">
+        <echo msg="  '${alias}',${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+    </target>
 </project>

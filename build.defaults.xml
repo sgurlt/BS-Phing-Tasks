@@ -358,6 +358,19 @@ $config_directories = [${line.separator}
         <echo msg="${line.separator}// Config directory.${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
         <echo msg="$settings['custom_translations_directory'] = '${translationDirectory}';${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
 
+        <!-- Set trusted hosts patterns. -->
+        <echo msg="Set trusted hosts patterns." />
+        <echo msg="${line.separator}// Set trusted hosts patterns." file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+        <echo msg="${line.separator}$settings['trusted_host_patterns'] = array(${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+        <echo msg="  '${sitesSubdir}',${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+        <if>
+            <istrue value="${addAlias}"/>
+            <then>
+                <foreach list="${urlAliases}" param="alias" target="setMultisiteTrustedHost" delimiter="," />
+            </then>
+        </if>
+        <echo msg=");${line.separator}" file="docroot/sites/${sitesSubdir}/settings.php" append="true" />
+
         <!-- Remove write permissions from settings.php and sitesDir. -->
         <echo msg="Remove write permissions from settings.php and sitesDir." />
         <exec command="chmod 0444 docroot/sites/${sitesSubdir}/settings.php" />
