@@ -320,7 +320,7 @@
         </echo>
 
         <pdosqlexec url="mysql:host=${dbHost}" userid="${dbUser}" password="${dbPassword}">
-            <transaction src="${project.basedir}/data/create.sql"/>
+            <transaction src="/tmp/create.sql"/>
         </pdosqlexec>
 
         <delete file="/tmp/create.sql" quiet="true"/>
