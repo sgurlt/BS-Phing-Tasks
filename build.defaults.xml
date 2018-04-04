@@ -311,7 +311,7 @@
         <!-- Creating database user and granting permissions -->
 
         <!-- This file is temporary and will be deleted after execution -->
-        <echo file="${project.basedir}/data/create.sql">
+        <echo file="/tmp/create.sql">
             CREATE USER '${subSiteUser}'@'${dbHost}' IDENTIFIED BY '${subSitePassword}';
             GRANT USAGE ON *.* TO '${subSiteUser}'@'%' IDENTIFIED BY '${subSitePassword}';
             GRANT UPDATE,CREATE,REFERENCES,ALTER,LOCK TABLES,CREATE VIEW,CREATE
@@ -323,7 +323,7 @@
             <transaction src="${project.basedir}/data/create.sql"/>
         </pdosqlexec>
 
-        <delete file="${project.basedir}/data/create.sql" quiet="true"/>
+        <delete file="/tmp/create.sql" quiet="true"/>
 
         <!-- Start site installation -->
         <echo msg="Start site installation" />
