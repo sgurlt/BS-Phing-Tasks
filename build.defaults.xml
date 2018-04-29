@@ -407,8 +407,9 @@ $aliases['${sitesSubdir}'] = array(${line.separator}
 );${line.separator}" file="drush/local.aliases.drushrc.php" append="true" />
 
         <!-- Import translations -->
-        <echo msg="Import translations" />
-        <phingcall target="Default:Translation-Import" />
+        <!-- @ToDo: Add translation import for multisites. -->
+        <!--<echo msg="Import translations" />-->
+        <!--<phingcall target="Default:Translation-Import" />-->
 
         <!-- Clear cache. -->
         <echo msg="Clear cache" />
