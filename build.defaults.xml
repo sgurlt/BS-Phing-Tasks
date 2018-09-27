@@ -17,7 +17,7 @@
             unless="project.installed">
         <tstamp />
 
-        <exec command='if [ ! "$(ls config)" ]; then echo "false"; else echo "true"; fi' outputProperty='output.CONFIG_EXISTS' />
+        <exec command='if [ ! "$(ls -p config | grep -v /)" ] && [ ! "$(ls -p config/sync | grep -v /)" ] ; then echo "false"; else echo "true"; fi' outputProperty='output.CONFIG_EXISTS' />
         <if>
             <equals arg1="${output.CONFIG_EXISTS}" arg2="true" />
             <then>
