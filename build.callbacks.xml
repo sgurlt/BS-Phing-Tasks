@@ -24,7 +24,7 @@
         <if>
             <not><isset property="config_path" /></not>
             <then>
-                <input message="Enter the path to the configuration you want this installation to be based on relative to your docroot folder." propertyName="config_path" defaultValue="../config"/>
+                <input message="Enter the path to the configuration you want this installation to be based on relative to your docroot folder." propertyName="config_path" defaultValue="../config/sync"/>
             </then>
         </if>
 
